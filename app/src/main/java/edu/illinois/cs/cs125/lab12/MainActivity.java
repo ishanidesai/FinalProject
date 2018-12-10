@@ -42,11 +42,11 @@ public final class MainActivity extends AppCompatActivity {
     /**
      * daily is another textview.
      */
-    private TextView daily;
+    //private TextView daily;
     /**
      * result is a third textview.
      */
-    private TextView result;
+    //private TextView result;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -58,8 +58,8 @@ public final class MainActivity extends AppCompatActivity {
         // Load the main layout for our activity
         setContentView(R.layout.activity_main);
 
-        daily = findViewById(R.id.dailyQuote);
-        startAPICall(daily);
+        //daily = findViewById(R.id.dailyQuote);
+        //startAPICall(daily);
 
 
         // Attach handler to search button
@@ -68,12 +68,12 @@ public final class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(final View v) {
                 Log.d(TAG, "Search button clicked");
-                result = (TextView) findViewById(R.id.searchResult);
+                tv = (TextView) findViewById(R.id.searchResult);
                 adviceSearch = findViewById(R.id.searchAdvice);
                 String query = adviceSearch.getText().toString();
                 Log.e(TAG, query);
 
-                searchButton(query, result);
+                searchButton(query, tv);
 
             }
         });
@@ -84,7 +84,7 @@ public final class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(final View v) {
                 Log.d(TAG, "Start API button clicked");
-                tv = (TextView) findViewById(R.id.jsonResult);
+                tv = (TextView) findViewById(R.id.searchResult);
                 startAPICall(tv);
             }
         });
@@ -141,7 +141,16 @@ public final class MainActivity extends AppCompatActivity {
                         public void onResponse(final JSONObject response) {
                             Log.d(TAG, response.toString());
                             try {
-                                v.setText((((JSONArray) response.get("slips")).getJSONObject(0)).get("advice").toString());
+                                int length = ((JSONArray) response.get("slips")).length();
+                                /*if (length > 5) {
+                                    length = 5;
+                                }*/
+                                String toSet = "";
+                                for (int i = 0; i < length; i++) {
+                                    String temp = (((JSONArray) response.get("slips")).getJSONObject(i)).get("advice").toString();
+                                    toSet = toSet + "\n\n" + temp;
+                                }
+                                v.setText(toSet);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
